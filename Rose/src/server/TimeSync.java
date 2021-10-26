@@ -11,14 +11,12 @@ public class TimeSync {
 	
 	private int[] local;
 	private int[] remote;
-	private int []last_inputs;
-	private int next_prediction;
+	private GameInput []last_inputs;
 	
 	public TimeSync() {
 		local = new int[FRAME_WINDOW_SIZE];
 		remote = new int[FRAME_WINDOW_SIZE];
-		last_inputs = new int[MIN_UNIQUE_FRAMES];
-		next_prediction = FRAME_WINDOW_SIZE * 3;
+		last_inputs = new GameInput[MIN_UNIQUE_FRAMES];
 	}
 	
 	public int recommend_frame_wait_durration(boolean require_idle_input) {
@@ -77,6 +75,8 @@ public class TimeSync {
 	}
 
 	public void advanceFrame(GameInput input, int local_frame_advantage, int remote_frame_advantage) {
-		
+		last_inputs[input.frame % last_inputs.length] = input;
+		local[input.frame % local.length] = local_frame_advantage;
+		remote[input.frame % remote.length] = remote_frame_advantage;
 	}
 }

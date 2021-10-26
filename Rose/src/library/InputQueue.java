@@ -2,14 +2,11 @@ package library;
 
 public class InputQueue {
     private static final int INPUT_QUEUE_LENGTH = 128;
-    private static final int DEFAULT_INPUT_SIZE = 4;
-    private int id;
     private int head;
     private int tail;
     private int length;
     private int frame_delay;
     private boolean first_frame;
-    private int last_user_added_frame;
     private int first_incorrect_frame;
     private int last_frame_requested;
     private int last_added_frame;
@@ -17,14 +14,12 @@ public class InputQueue {
     private GameInput[] inputs;
     private GameInput currentInput;
 
-    public InputQueue(int id) {
-        this.id = id;
+    public InputQueue() {
         head = 0;
         tail = 0;
         length = 0;
         frame_delay = 2;
         first_frame = true;
-        last_user_added_frame   = GameInput.NULL_FRAME;
         first_incorrect_frame   = GameInput.NULL_FRAME;
         last_frame_requested    = GameInput.NULL_FRAME;
         last_added_frame        = GameInput.NULL_FRAME;
@@ -42,7 +37,6 @@ public class InputQueue {
     public void addInput(GameInput gameInput) {
 //        assert( last_user_added_frame == GameInput.NULL_FRAME ||
 //                gameInput.frame == last_user_added_frame + 1);
-        last_user_added_frame = gameInput.frame;
 
         int new_frame = advanceQueueHead(gameInput.frame);
         if(new_frame != GameInput.NULL_FRAME) {

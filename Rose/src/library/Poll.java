@@ -4,19 +4,13 @@ import java.util.ArrayList;
 
 public class Poll implements IPollSink {
 	private static final int INFINITE = Integer.MAX_VALUE;
-    private static final int MAX_POLLABLE_HANDLES = 64;
     private long startTime;
-    private int handleCount;
-    private Object[] handles;
     private final ArrayList<PollSinkCb> loopSinks;
     private final ArrayList<PollSinkCb> msgSinks;
     private final ArrayList<PollPeriodicSinkCb> periodicSinks;
 
     public Poll() {
         startTime = 0;
-        handleCount = 0;
-        handles = new Object[MAX_POLLABLE_HANDLES];
-        // TODO: may need a dummy handle?
         loopSinks = new ArrayList<PollSinkCb>(16);
         msgSinks = new ArrayList<PollSinkCb>(16);
         periodicSinks = new ArrayList<PollPeriodicSinkCb>(16);
@@ -30,9 +24,8 @@ public class Poll implements IPollSink {
         loopSinks.add(new PollSinkCb(sink, cookie));
     }
 
-    // TODO: pump all of the sinks and returned when the pump has finished.
     public boolean pump(int timeout) {
-        int i, res;
+        int i;
         boolean finished = false;
 
         if(startTime == 0) {
@@ -44,8 +37,6 @@ public class Poll implements IPollSink {
         if(maxwait != Integer.MAX_VALUE) {
             timeout = Math.min(timeout, maxwait);
         }
-
-        // TODO: do something about handle sinks idk what yet because GGPO uses WaitForMultipleObjects whiche is Win32 exclusive.
 
         for(i = 0; i < msgSinks.size(); i++) {
             PollSinkCb cb = msgSinks.get(i);

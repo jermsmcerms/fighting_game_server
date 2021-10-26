@@ -34,6 +34,10 @@ public class GgpoEvent {
             case GGPO_EVENTCODE_CONNECTION_RESUMED:
                 connectionResumed = new ConnectionResumed();
                 break;
+		case GGPO_EVENTCODE_RUNNING:
+			break;
+		default:
+			break;
         }
     }
 

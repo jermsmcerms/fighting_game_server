@@ -1,12 +1,12 @@
 package library;
 
-public class RingBuffer <T> {
-    public int size;
+public class RingBuffer<T> {
+	public int size;
 
-    private final int capacity;
-    private final T[] ring;
+	private int capacity;
     private int head;
     private int tail;
+    private T[] ring;
 
     public RingBuffer(int size) {
         this.capacity = size;
@@ -17,7 +17,6 @@ public class RingBuffer <T> {
     }
 
     public void push(T element) {
-//        System.out.println("size " + size + " cap - 1 = " + (capacity - 1));
         assert size != (capacity -1);
         ring[head] = element;
         head = (head + 1) % capacity;
@@ -42,4 +41,5 @@ public class RingBuffer <T> {
 
     public int size() { return size; }
     public boolean empty() { return size == 0; }
+    
 }

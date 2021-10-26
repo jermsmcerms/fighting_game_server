@@ -1,8 +1,10 @@
 package library;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 
+/*
+ * Server might not need this since this is just responsible for calculating predictions
+ */
 public class Sync {
     private final int max_prediction_frames;
     private boolean inRollBack;
@@ -20,7 +22,7 @@ public class Sync {
 
         input_queues = new ArrayList<InputQueue>(2);
         for(int i = 0; i < 2; i++) {
-            input_queues.add(new InputQueue(i));
+            input_queues.add(new InputQueue());
         }
 
         savedState = new SavedState();
