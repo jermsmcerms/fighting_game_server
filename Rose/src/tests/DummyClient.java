@@ -42,4 +42,8 @@ public class DummyClient {
 	private void addLocalInupt(int frame_count, int i) {
 		test_callbacks.sendInput(new GameInput(frame_count, i));
 	}
+
+	public int getFrame() {
+		return frame_count;
+	}
 }

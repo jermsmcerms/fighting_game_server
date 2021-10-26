@@ -9,7 +9,9 @@ import network.UdpMsg;
 import network.UdpProto;
 
 public class InputReceiveTest extends ServerBuilder {
+	private static final int RECOMMENDATION_INTERVAL = 240000000;
 	DummyClient dc;
+	private int next_recommended_sleep;
 	
 	public InputReceiveTest() throws IOException {
 		super();
@@ -32,6 +34,21 @@ public class InputReceiveTest extends ServerBuilder {
 	
 	public void doPoll(long timeout) {
 		poll.pump(0);
+		if(	endpoints[0] != null && 
+			endpoints[0].getCurrentState() == ConnectState.Running) {
+			int current_frame = dc.getFrame();
+			endpoints[0].setLocalFrameNumber(current_frame);
+			if(current_frame > next_recommended_sleep) {
+                int interval =
+                    Math.max(0, endpoints[0].recommendFrameDelay());
+                
+                if(interval > 0) {
+                    System.out.println("try to sleep for: " + 
+                        (1000000000 * interval / 60) + " frames");
+                    next_recommended_sleep = current_frame + RECOMMENDATION_INTERVAL;
+                }
+            }
+		}
 	}
 	
 	

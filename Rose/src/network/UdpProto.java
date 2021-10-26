@@ -22,6 +22,7 @@ public class UdpProto implements IPollSink {
     private static final int SYNC_FIRST_RETRY_INTERVAL  = 500000000;
 	private static final long UDP_SHUTDOWN_TIMER 		= 5000000000L;
 	private static final long RUNNING_RETRY_INTERVAL 	= 200000000L;
+	private static final long NETWORK_STATS_INTERVAL 	= 1000000000L;
     private static int playerNumber = 1;
     public static int numConnections = 0;
     
@@ -82,6 +83,8 @@ public class UdpProto implements IPollSink {
 		last_received_input = new GameInput(GameInput.NULL_FRAME, 0);
         last_sent_input = new GameInput(GameInput.NULL_FRAME, 0);
         last_acked_input = new GameInput(GameInput.NULL_FRAME, 0);
+        
+        timeSync = new TimeSync();
 	}
     
 	public void init() {
@@ -423,32 +426,33 @@ public class UdpProto implements IPollSink {
                 break;
             case Running:
             	if( state.running.last_input_packet_recv_time <= 0 ||
-                state.running.last_input_packet_recv_time + RUNNING_RETRY_INTERVAL < now) {
-                System.out.println("haven't exchanged packets in a while (last received: " +
-                    last_received_input.frame + ", last sent: " +
-                    last_sent_input.frame + "). Resending");
-                sendPendingOutput();
-                state.running.last_input_packet_recv_time = now;
-            }
-//                if(state.running.last_quality_report_time <= 0 ||
-//                    state.running.last_quality_report_time +
-//                    QUALITY_REPORT_INTERVAL < now) {
-//                    UdpMsg msg = new UdpMsg(UdpMsg.MsgType.QualityReport);
-//                    msg.payload.qualrpt.ping = System.nanoTime();
-//                    msg.payload.qualrpt.frame_advantage = local_frame_advantage;
-//                    sendMsg(msg);
-//                    state.running.last_quality_report_time = now;
-//                }
-                
-//                if( disconnect_timeout > 0 && disconnect_notify_start > 0 &&
-//                        !disconnect_notify_sent &&
-//                        last_recv_time + disconnect_notify_start < now) {
-//                        System.out.println(
-//                            "Endpoint has stopped receiving packets for " +
-//                            disconnect_notify_start + ". Sending notification");
-//                        event_queue.push(new UdpProtocolEvent(UdpProtocolEvent.Event.Disconnected));
-//                        disconnect_notify_sent = true;
-//                    }
+                	state.running.last_input_packet_recv_time + 
+                	RUNNING_RETRY_INTERVAL < now) {
+            		System.out.println(
+        				"haven't exchanged packets in a while (last received: " +
+						last_received_input.frame + ", last sent: " +
+						last_sent_input.frame + "). Resending");
+            		sendPendingOutput();
+            		state.running.last_input_packet_recv_time = now;
+            	}
+            	
+            	if( state.running.last_quality_report_time <= 0 ||
+                        state.running.last_quality_report_time +
+                            QUALITY_REPORT_INTERVAL < now) {
+                        UdpMsg msg = new UdpMsg(UdpMsg.MsgType.QualityReport);
+                        msg.payload.qualrpt.ping = System.nanoTime();
+                        msg.payload.qualrpt.frame_advantage = local_frame_advantage;
+                        sendMsg(msg);
+                        state.running.last_quality_report_time = now;
+                    }
+
+                    if( state.running.last_network_stats_interval <= 0 ||
+                        state.running.last_network_stats_interval +
+                            NETWORK_STATS_INTERVAL < now) {
+                        System.out.println("Update network stats");
+                        state.running.last_network_stats_interval = now;
+                    }
+            	
                 break;
             case Disconnected:
             	if(shutdown_timeout < now) {
@@ -475,10 +479,10 @@ public class UdpProto implements IPollSink {
 
 	public void setLocalFrameNumber(int local_frame) {
         if(last_received_input != null) {
-            int remoteFrame =
-                    (int)(last_received_input.frame +
-                            (round_trip_time * 60 / 1000));
-            local_frame_advantage = remoteFrame - local_frame;		
+            long remote_frame =
+                (last_received_input.frame +
+                (round_trip_time * 60 / 1000000000L));
+            local_frame_advantage = (int)(remote_frame - local_frame);
         }
 	}
 
