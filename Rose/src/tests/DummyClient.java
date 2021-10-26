@@ -6,7 +6,6 @@ import library.ConnectState;
 import library.GameInput;
 
 public class DummyClient {
-	private static final int[] inputs_to_send = { 6, 7, 8, 9, 10 };
 	private int frame_count;
 	private InputReceiveTest test_callbacks;
     private int input;
@@ -15,11 +14,12 @@ public class DummyClient {
 	public DummyClient(InputReceiveTest test_callbacks) {
 		this.test_callbacks = test_callbacks;
         input = getRandomInput();
+        frame_count = 1;
 	}
 	
 	public void runFrame() {
 		if(test_callbacks.getConnectionState() == ConnectState.Running) {
-			if(frame_timer > 4) {
+			if(frame_timer > 5) {
                 input = getRandomInput();
                 frame_timer = 0;
             }
