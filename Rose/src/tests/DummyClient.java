@@ -14,7 +14,6 @@ public class DummyClient {
 	public DummyClient(InputReceiveTest test_callbacks) {
 		this.test_callbacks = test_callbacks;
         input = getRandomInput();
-        frame_count = 1;
 	}
 	
 	public void runFrame() {
