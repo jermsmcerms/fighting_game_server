@@ -77,10 +77,10 @@ public class InputReceiveTest extends ServerBuilder {
 		}
 	}
 
-	public void sendInput(GameInput gameInput) {
+	public void sendInput(GameInput gameInput, UdpMsg.ConnectStatus local_connect_status) {
 		if(endpoints[0] != null) {
 			System.out.println("sending input frame: " + gameInput.frame + " input " + gameInput.input);
-			endpoints[0].sendInput(gameInput, endpoints[0].getAddress());
+			endpoints[0].sendInput(gameInput, endpoints[0].getAddress(), local_connect_status);
 		}
 	}
 

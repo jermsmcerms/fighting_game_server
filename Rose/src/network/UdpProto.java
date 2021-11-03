@@ -361,15 +361,22 @@ public class UdpProto implements IPollSink {
 		return input_queue.pop();
 	}
 	
-	public void sendInput(GameInput input, SocketAddress dst) {
+	public void sendInput(GameInput input, SocketAddress dst, UdpMsg.ConnectStatus local_connect_status) {
 		if(udp != null) {
 			if(current_state == ConnectState.Running) {
 				pending_output.push(input);
 			}
 		}
+		updateLocalConnectStatus(local_connect_status);
 		sendPendingOutput();
 	}
 
+	
+	private void updateLocalConnectStatus(UdpMsg.ConnectStatus local_connect_status) {
+		this.local_connect_status.disconnected = local_connect_status.disconnected;
+		this.local_connect_status.last_frame = local_connect_status.last_frame;
+	}
+	
 	public void sendPendingOutput() {
 		 UdpMsg msg = new UdpMsg(UdpMsg.MsgType.Input);
 	        int i, j, offset = 0;
@@ -394,6 +401,9 @@ public class UdpProto implements IPollSink {
 	            local_connect_status = new UdpMsg.ConnectStatus();
 	            local_connect_status.disconnected = false;
 	            local_connect_status.last_frame = 0;
+	        } else {
+	        	msg.payload.input.connect_status.disconnected = local_connect_status.disconnected;
+	        	msg.payload.input.connect_status.last_frame = local_connect_status.last_frame;
 	        }
 
 	        sendMsg(msg);
