@@ -1,18 +1,11 @@
 package library;
 
-public interface Ggpo {
-	default boolean startSession() { return true; }
-	default boolean addPlayer() { return true; }
-	default boolean startSyncTest() { return true; }
-	default boolean startSpectating() { return true; }
-	default boolean closeSession() { return true; }
-	default boolean setFrameDelay() { return true; }
-	default boolean idle(long timeout) { return true; }
-	default boolean addLocalInput() { return true; }
-	default boolean synchronizeInput() { return true; }
-	default boolean disconncetPlayer() { return true; } 
-	default boolean advanceFrame() { return true; }
-	default boolean getNetworkStats() { return true; }
-	default boolean setDisconnectTimeout() { return true; }
-	default boolean setDisconnectNotifyStart() { return true; }
+public interface GGPO {
+	boolean beginGame(String name);
+    SaveGameState saveGameState();
+    boolean loadFrame(byte[] buffer, int length);
+    boolean logGameState(String filename, String buffer);
+    Object freeBuffer(Object buffer); // <--- probably don't need cos java
+    boolean advanceFrame(int flags);
+    boolean onEvent(GgpoEvent event);
 }

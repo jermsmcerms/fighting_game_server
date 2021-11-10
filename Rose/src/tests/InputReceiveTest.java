@@ -9,7 +9,7 @@ import network.UdpMsg;
 import network.UdpProto;
 
 public class InputReceiveTest extends ServerBuilder {
-	private static final int RECOMMENDATION_INTERVAL = 240000000;
+	private static final int RECOMMENDATION_INTERVAL = 240;
 	DummyClient dc;
 	private int next_recommended_sleep;
 	
@@ -22,12 +22,12 @@ public class InputReceiveTest extends ServerBuilder {
 	public void run() {
 		super.run();
 		while(true) {
-			now = System.nanoTime();
+			now = System.currentTimeMillis();
 			doPoll(Math.max(0, next - now - 1));
 			if(now >= next) {
 				dc.runFrame();
 			// increase the amount time passed by one frame in nanoseconds
-			next = now + (1000000000L/60);
+			next = now + (1000 /60);
 			}
 		}
 	}
@@ -43,8 +43,15 @@ public class InputReceiveTest extends ServerBuilder {
                     Math.max(0, endpoints[0].recommendFrameDelay());
                 
                 if(interval > 0) {
-                    System.out.println("try to sleep for: " + 
-                        (1000000000 * interval / 60) + " frames");
+                	try {
+                		System.out.println("sleep for " + interval + " frames.");
+                		long now = System.currentTimeMillis();
+                        Thread.sleep(1000L * interval / 60);
+                        long next = System.currentTimeMillis();
+                        System.out.println("sleep: " + (next - now));
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    }
                     next_recommended_sleep = current_frame + RECOMMENDATION_INTERVAL;
                 }
             }
@@ -79,7 +86,6 @@ public class InputReceiveTest extends ServerBuilder {
 
 	public void sendInput(GameInput gameInput, UdpMsg.ConnectStatus local_connect_status) {
 		if(endpoints[0] != null) {
-			System.out.println("sending input frame: " + gameInput.frame + " input " + gameInput.input);
 			endpoints[0].sendInput(gameInput, endpoints[0].getAddress(), local_connect_status);
 		}
 	}

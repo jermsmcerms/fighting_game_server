@@ -31,14 +31,18 @@ public class DummyClient {
                 frame_timer = 0;
             }
             frame_timer++;
-            System.out.println("adding frame: " + frame_count);
 			addLocalInupt(frame_count, input);
-			frame_count++;
+			advanceFrame();
 		}
-		test_callbacks.doPoll(0);
 	}
 	
-    private int getRandomInput() {
+    private void advanceFrame() {
+    	System.out.println("end of frame: " + frame_count);
+    	test_callbacks.doPoll(0);
+		frame_count++;
+	}
+
+	private int getRandomInput() {
         int retval = 1;
         int randomInt = ThreadLocalRandom.current().nextInt(-1, 8);
         if(randomInt == -1) {

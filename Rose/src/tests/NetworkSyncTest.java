@@ -18,9 +18,9 @@ public class NetworkSyncTest extends ServerBuilder {
 	@Override
 	public void run() {
 		System.out.println("Now listening for connections on port " + PORT_NUM);
-		now = next = System.nanoTime();
+		now = next = System.currentTimeMillis();
 		while(!shut_down) {
-			now = System.nanoTime();
+			now = System.currentTimeMillis();
 			poll.pump(0);
 			if(now >= next) {
 				poll.pump(0);
@@ -50,7 +50,7 @@ public class NetworkSyncTest extends ServerBuilder {
 						endpoints[1].getCurrentState() == ConnectState.Disconnected &&
 						endpoints[0].getUdp() == null || endpoints[1].getUdp() == null;
 				}
-				next = now + (1000000000L/60); 
+				next = now + (1000/60); 
 			}
 		}
 	}

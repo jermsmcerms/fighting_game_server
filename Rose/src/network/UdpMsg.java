@@ -390,4 +390,34 @@ public class UdpMsg {
     public static class QualityReply {
         public long pong;
     }
+
+	public int getPacketSize() {
+		 int size = -1;
+	        switch (MsgType.values()[hdr.type]) {
+	            case Invalid:
+	                size = 0;
+	                break;
+	            case ConnectReq:
+	            case SyncReply:
+	            case StartReq:
+	            case StartRep:
+	                size = 4;
+	                break;
+	            case ConnectReply:
+	            case QualityReply:
+	                size = 8;
+	                break;
+	            case SyncRequest:
+	                size = 9;
+	                break;
+	            case Input:
+	                size = 5+4+1+4+4+4+128;
+	                break;
+	            case QualityReport:
+	                size = 12;
+	                break;
+	        }
+	        assert(size > 0);
+	        return size;
+	}
 }

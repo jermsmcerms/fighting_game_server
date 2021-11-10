@@ -39,7 +39,7 @@ public abstract class ServerBuilder implements UdpCallbacks {
 
 	public void run() {
 		System.out.println("Now listening for connections on port " + PORT_NUM);
-		now = next = System.nanoTime();
+		now = next = System.currentTimeMillis();
 	}
 	
 	@Override

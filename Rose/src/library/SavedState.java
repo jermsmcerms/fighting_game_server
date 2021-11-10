@@ -1,7 +1,7 @@
 package library;
 
 public class SavedState {
-    private static final int MAX_PREDICTION_FRAMES = 10;
+    private static final int MAX_PREDICTION_FRAMES = 8;
     public SavedFrame[] frames;
     public int head;
 
@@ -18,7 +18,7 @@ public class SavedState {
 
     public SavedState() {
         head = 0;
-        frames = new SavedFrame[MAX_PREDICTION_FRAMES + 2];
+        frames = new SavedFrame[MAX_PREDICTION_FRAMES * 2];
         for(int i = 0; i < frames.length; i++) {
             frames[i] = new SavedFrame();
         }

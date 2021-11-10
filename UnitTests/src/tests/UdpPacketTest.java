@@ -37,10 +37,10 @@ public class UdpPacketTest implements TestInterface {
 		} else {
 			// Message received. Now, send reply's to the client.
 			long start, now, maxTime;
-	    	maxTime = 30000000000L;
-	    	now = start = System.nanoTime();
+	    	maxTime = 3000;
+	    	now = start = System.currentTimeMillis();
 	    	while(now - start <= maxTime) {
-	    		now = System.nanoTime();
+	    		now = System.currentTimeMillis();
 				udp.sendTo(new UdpMsg(MsgType.PacketTest));
 	    	}
 		}

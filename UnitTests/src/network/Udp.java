@@ -34,10 +34,10 @@ public class Udp {
     
     public boolean onLoopPoll(Object cookie) {
     	long start, now, maxTime;
-    	maxTime = 30000000000L;
-    	now = start = System.nanoTime();
+    	maxTime = 3000;
+    	now = start = System.currentTimeMillis();
     	while(now - start <= maxTime) {
-    		now = System.nanoTime();
+    		now = System.currentTimeMillis();
 	        try {
 	        	rec_buf.clear();
 				SocketAddress rec_addr = dgc.receive(rec_buf);
@@ -45,7 +45,7 @@ public class Udp {
 				if(rec_addr == null) { 
 					System.out.println(
 						"Message not received. Will wait for " + 
-						((maxTime - (now - start))/1000000000L) + 
+						((maxTime - (now - start))/1000) + 
 						" more seconds");
 				}
 				else { 

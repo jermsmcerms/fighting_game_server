@@ -13,16 +13,16 @@ public class GgpoEvent {
     public GgpoEvent(GGPOEventCode code) {
         this.code = code;
         switch (this.code) {
-            case GGPO_EVENTCODE_CONNECTED_TO_PEER:
+            case GGPO_EVENTCODE_CONNECTED_TO_SERVER:
                 connected = new Connected();
                 break;
-            case GGPO_EVENTCODE_SYNCHRONIZED_WITH_PEER:
+            case GGPO_EVENTCODE_SYNCHRONIZED_WITH_SERVER:
                 synchronizing = new Synchronizing();
                 break;
-            case GGPO_EVENTCODE_SYNCHRONIZING_WITH_PEER:
+            case GGPO_EVENTCODE_SYNCHRONIZING_WITH_SERVER:
                 synced = new Synchronized();
                 break;
-            case GGPO_EVENTCODE_DISCONNECTED_FROM_PEER:
+            case GGPO_EVENTCODE_DISCONNECTED_FROM_SERVER:
                 disconnected = new Disconnected();
                 break;
             case GGPO_EVENTCODE_TIMESYNC:

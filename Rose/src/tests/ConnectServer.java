@@ -29,9 +29,9 @@ public class ConnectServer extends ServerBuilder {
 	@Override
 	public void run() {
 		System.out.println("Now listening for connections on port " + PORT_NUM);
-		now = next = System.nanoTime();
+		now = next = System.currentTimeMillis();
 		while(!connect_request_received && !connect_reply_sent) {
-			now = System.nanoTime();
+			now = System.currentTimeMillis();
 			poll.pump(0); // pump messages "between" frames
 			// this determines if enough time has passes to process a single frame
 			// of a game state.
@@ -47,7 +47,7 @@ public class ConnectServer extends ServerBuilder {
 					}
 				}
 				// increase the amount time passed by one frame in nanoseconds
-				next = now + (1000000000L/60); 
+				next = now + (1000/60); 
 			}
 		}
 		System.out.println("Connection test passed. Exiting");
